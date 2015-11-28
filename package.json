@@ -15,14 +15,26 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.sayHello"
+		"onCommand:codesync.backup",
+		"onCommand:codesync.restore",
+		"onCommand:codesync.show"
 	],
 	"main": "./out/src/extension",
 	"contributes": {
-		"commands": [{
-			"command": "extension.sayHello",
-			"title": "Hello World"
-		}]
+		"commands": [
+			{
+				"command": "codesync.backup",
+				"title": "Sync Backup"
+			},
+			{
+				"command": "codesync.restore",
+				"title": "Sync Restore"
+			},
+			{
+				"command": "codesync.show",
+				"title": "Sync Show"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
