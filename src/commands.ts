@@ -8,17 +8,41 @@ export function backup()
 	let configp = config_provider.getConfigProvider();
 	let backupp = backup_provider.getBackupProvider();
 	
-	configp.getConfigs(false).forEach(config => {
-		let configDest = backupp.getConfig(config, false);
-		configDest.replaceBy(config);
-	});
-	
-	backupp.save();
+	configp.getConfigs(false).then(
+		(configs) => {
+			var it = configs.entries();
+			
+			let processNext = () => {
+				if (it.next().done) {
+					backupp.save().then(() => {
+						console.log("Backup sucessfull!");
+					});
+					return;
+				}
+				
+				let config = it.next().value[1];
+				backupp.getConfig(config, false).then((backup) => {
+					backup.replaceBy(config).then(processNext, (reason) => {
+						console.log("Failed to backup " + config.name() + " [" + reason + "]");
+						processNext();
+					});
+				}, (reason) => {
+					console.log("Failed find backup location for " + config.name() + " [" + reason + "]");
+					processNext();
+				})
+			};
+			
+			processNext();
+		},
+		(reason) => {
+			console.log("Failed to get config list [" + reason + "]");
+		}
+	);
 }
 
 export function restore()
 {
-	console.log("Start full restore...");
+	/*console.log("Start full restore...");
 	let configp = config_provider.getConfigProvider();
 	let backupp = backup_provider.getBackupProvider();
 	
@@ -27,7 +51,7 @@ export function restore()
 		configDest.replaceBy(config);
 	});
 	
-	configp.save();
+	configp.save();*/
 }
 
 export function show()

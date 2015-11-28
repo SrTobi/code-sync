@@ -2,10 +2,10 @@ import {GenericConfig} from './generic_config'
 
 
 export interface ConfigProvider {
-	getConfigs(mergable:boolean):GenericConfig[];
-	getConfig(template:GenericConfig, mergable:boolean):GenericConfig;
+	getConfigs(mergable:boolean):Thenable<GenericConfig[]>;
+	getConfig(template:GenericConfig, mergable:boolean):Thenable<GenericConfig>;
 	
-	save();
+	save():Thenable<void>;
 }
 
 export function getConfigProvider():ConfigProvider {

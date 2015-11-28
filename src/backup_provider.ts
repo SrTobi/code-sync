@@ -1,12 +1,8 @@
-import {GenericConfig} from './generic_config'
+import {GenericConfig} from './generic_config';
+import {ConfigProvider} from './config_provider';
 
-export interface BackupProvider {
+export interface BackupProvider extends ConfigProvider {
 	supportVersioning():boolean;
-	
-	getConfigs(mergable:boolean):GenericConfig[];
-	getConfig(template:GenericConfig, mergable:boolean):GenericConfig;
-	
-	save();
 }
 
 export function getBackupProvider():BackupProvider {

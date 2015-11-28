@@ -11,5 +11,5 @@ export interface GenericConfig {
 	
 	canMerge(settings:GenericConfig):boolean;
 	
-	clone(destination:string);
+	clone(destination:string):GenericConfig;
 }
