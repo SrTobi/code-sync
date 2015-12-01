@@ -2,42 +2,20 @@ import * as vscode from 'vscode';
 import * as config_provider from './config_provider';
 import * as backup_provider from './backup_provider';
 
-export function backup()
+export async function backup()
 {
 	console.log("Start full backup...");
 	let configp = config_provider.getConfigProvider();
 	let backupp = backup_provider.getBackupProvider();
 	
-	configp.getConfigs(false).then(
-		(configs) => {
-			var it = configs.entries();
-			
-			let processNext = () => {
-				if (it.next().done) {
-					backupp.save().then(() => {
-						console.log("Backup sucessfull!");
-					});
-					return;
-				}
-				
-				let config = it.next().value[1];
-				backupp.getConfig(config, false).then((backup) => {
-					backup.replaceBy(config).then(processNext, (reason) => {
-						console.log("Failed to backup " + config.name() + " [" + reason + "]");
-						processNext();
-					});
-				}, (reason) => {
-					console.log("Failed find backup location for " + config.name() + " [" + reason + "]");
-					processNext();
-				})
-			};
-			
-			processNext();
-		},
-		(reason) => {
-			console.log("Failed to get config list [" + reason + "]");
-		}
-	);
+	let configs = await configp.getConfigs(false);
+	
+	for (var config in configs) {
+		let backup = await backupp.getConfig(config);
+		backup.replaceBy(config);
+	}
+	
+	console.log("Backup sucessfull!");
 }
 
 export function restore()
