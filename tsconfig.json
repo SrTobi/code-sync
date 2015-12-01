@@ -1,11 +1,12 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
 		"target": "ES6",
+		"module": "commonjs",
 		"outDir": "out",
 		"noLib": true,
 		"sourceMap": true,
-		"experimentalAsyncFunctions": true
+		"experimentalAsyncFunctions": true,
+		"noImplicitAny": true
 	},
 	"exclude": [
 		"node_modules"

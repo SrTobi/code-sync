@@ -1,55 +1,63 @@
 {
-	"name": "code-sync",
-	"displayName": "SyncSettings",
-	"description": "A Visual Studio Code extension to synchronize your settings.",
-	"version": "0.0.1",
-	"publisher": "SirTobi",
-	"author": {
-	"name": "Tobias Kahlert (a.k.a SirTobi)"
-	},
-	"homepage": "https://github.com/SrTobi/code-sync/",
-	"engines": {
-		"vscode": "^0.10.1"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"onCommand:codesync.backup",
-		"onCommand:codesync.restore",
-		"onCommand:codesync.show"
-	],
-	"main": "./out/src/extension",
-	"contributes": {
-		"commands": [
-			{
-				"command": "codesync.backup",
-				"title": "Sync Backup"
-			},
-			{
-				"command": "codesync.restore",
-				"title": "Sync Restore"
-			},
-			{
-				"command": "codesync.show",
-				"title": "Sync Show"
-			}
-		]
-	},
-	"scripts": {
-		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-		"compile": "node ./node_modules/vscode/bin/compile -watch -p ./"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/SrTobi/code-sync/"
-	},
-	"bugs": {
-		"url": "https://github.com/SrTobi/code-sync/issues"
-	},
-	
-	"devDependencies": {
-		"typescript": "^1.6.2",
-		"vscode": "0.10.x"
-	}
+  "name": "code-sync",
+  "displayName": "SyncSettings",
+  "description": "A Visual Studio Code extension to synchronize your settings.",
+  "version": "0.0.1",
+  "publisher": "SirTobi",
+  "author": {
+    "name": "Tobias Kahlert (a.k.a SirTobi)"
+  },
+  "homepage": "https://github.com/SrTobi/code-sync/",
+  "engines": {
+    "vscode": "^0.10.1"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:codesync.backup",
+    "onCommand:codesync.restore",
+    "onCommand:codesync.show"
+  ],
+  "main": "./out/src/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "codesync.backup",
+        "title": "Sync Backup"
+      },
+      {
+        "command": "codesync.restore",
+        "title": "Sync Restore"
+      },
+      {
+        "command": "codesync.show",
+        "title": "Sync Show"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "gulp build",
+    "compile": "gulp build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SrTobi/code-sync/"
+  },
+  "bugs": {
+    "url": "https://github.com/SrTobi/code-sync/issues"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.2.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.2.0",
+    "babel-plugin-transform-es2015-spread": "^6.1.18",
+    "babel-preset-stage-3": "^6.1.18",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^6.1.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-typescript": "^2.9.2",
+    "typescript": "^1.6.2",
+    "vscode": "0.10.x"
+  },
+  "dependencies": {}
 }

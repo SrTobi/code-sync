@@ -10,7 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 	context.subscriptions.push(cmd1);
 	
-	let cmd2 = vscode.commands.registerCommand('codesync.restore', () => {
+	/*let cmd2 = vscode.commands.registerCommand('codesync.restore', () => {
 		commands.restore();
 	});
 	context.subscriptions.push(cmd2);
@@ -18,5 +18,5 @@ export function activate(context: vscode.ExtensionContext) {
 	let cmd3 = vscode.commands.registerCommand('codesync.show', () => {
 		commands.show();
 	});
-	context.subscriptions.push(cmd3);
+	context.subscriptions.push(cmd3);*/
 }

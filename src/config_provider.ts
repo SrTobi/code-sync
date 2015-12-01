@@ -1,27 +1,32 @@
-import {GenericConfig} from './generic_config'
+import {ConfigHandle, FileConfigHandle} from './config_handle';
+import * as env from './environment';
 
 
 export interface ConfigProvider {
-	getConfigs(mergable: boolean): Promise<GenericConfig[]>;
-	getConfig(template: GenericConfig): Promise<GenericConfig>;
+	getConfigs(): Promise<ConfigHandle[]>;
+	getConfig(template: ConfigHandle): Promise<ConfigHandle>;
 
 	save(): Promise<void>;
 }
 
 class ActiveConfigProvider implements ConfigProvider {
 
-	async getConfigs(): Promise<GenericConfig[]> {
-		return new Promise<GenericConfig[]>(resolve => {
-			resolve(new Array<GenericConfig>());
+	async getConfigs(): Promise<ConfigHandle[]> {
+		return new Promise<ConfigHandle[]>(resolve => {
+			let configs = new Array<ConfigHandle>();
+			
+			configs.push(new FileConfigHandle(env.getEnvironment().getSettingsPath(), "user.settings", this));
+			
+			resolve(configs);
 		});
 	}
 	
-	async getConfig(template: GenericConfig): Promise<GenericConfig> {
+	async getConfig(template: ConfigHandle): Promise<ConfigHandle> {
 		throw new Error("Not implemented");
 	}
 
 	async save(): Promise<void> {
-		
+		throw new Error("Not implemented");
 	}
 }
 

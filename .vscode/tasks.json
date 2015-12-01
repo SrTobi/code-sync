@@ -11,16 +11,16 @@
 	"version": "0.1.0",
 
 	// we want to run npm
-	"command": "npm",
+	"command": "gulp",
 
 	// the command is a shell script
 	"isShellCommand": true,
 
 	// show the output window only if unrecognized errors occur.
-	"showOutput": "silent",
+	"showOutput": "always",
 
 	// we run the custom script "compile" as defined in package.json
-	"args": ["run", "compile", "--loglevel", "silent"],
+	"args": ["build"],
 
 	// The tsc compiler is started in watching mode
 	"isWatching": true,

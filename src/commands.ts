@@ -8,12 +8,14 @@ export async function backup()
 	let configp = config_provider.getConfigProvider();
 	let backupp = backup_provider.getBackupProvider();
 	
-	let configs = await configp.getConfigs(false);
+	let configs = await configp.getConfigs();
 	
 	for (var config in configs) {
 		let backup = await backupp.getConfig(config);
 		backup.replaceBy(config);
 	}
+	
+	await backupp.save();
 	
 	console.log("Backup sucessfull!");
 }
