@@ -16,18 +16,19 @@ export interface BackupProvider extends ConfigProvider {
 	supportVersioning(): boolean;
 }
 
-
 var GlobalProviderList: { [id: string]: BackupProviderFactory } = {};
 
-export function addBackupProvider(type: string, factory: BackupProviderFactory): void {
+export function registerBackupProvider(type: string, factory: BackupProviderFactory): void {
 	if (GlobalProviderList[type] !== undefined) {
 		throw new Error("Provider '" + type + "' already defined!");
 	}
 	
 	GlobalProviderList[type] = factory;
+	console.log("Registered backup provider '" + type + "'.");
 }
 
 function createBackupProvider(pt: BackupProviderConfigTemplate): BackupProvider {
+	console.log("Create backup provider '" + pt.type + "'...");
 	let provider = GlobalProviderList[pt.type];
 	if (provider === undefined) {
 		throw new Error("Undefined backup provider!");
