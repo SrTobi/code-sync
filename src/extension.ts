@@ -1,5 +1,6 @@
+import 'babel-polyfill'; 
 import * as commands from './commands';
-import * as vscode from 'vscode'; 
+import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
 
