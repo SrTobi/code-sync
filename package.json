@@ -34,7 +34,42 @@
         "command": "codesync.show",
         "title": "Sync Show"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "CodeSync Configuration",
+      "type": "object",
+      "properties": {
+        "codesync.backupProviders": {
+          "title": "Backup providers",
+          "type": "array",
+          "description": "A list of backup providers.",
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "description": "The filesystem provider. Backups the settings to the local filesystem.",
+                "properties": {
+                  "type": {
+                    "enum": [ "fs" ],
+                    "description": "The type of the backup provider."
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "The path to the backup location."
+                  }
+                }
+              }
+            ]
+          },
+          "default": [
+            {
+              "type": "fs",
+              "path": "/test"
+            }
+          ]
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "gulp build",
