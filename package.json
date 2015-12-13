@@ -50,7 +50,9 @@
                 "description": "The filesystem provider. Backups the settings to the local filesystem.",
                 "properties": {
                   "type": {
-                    "enum": [ "fs" ],
+                    "enum": [
+                      "fs"
+                    ],
                     "description": "The type of the backup provider."
                   },
                   "path": {
@@ -91,7 +93,7 @@
     "gulp-babel": "^6.1.1",
     "gulp-concat": "^2.6.0",
     "gulp-typescript": "^2.9.2",
-    "typescript": "^1.6.2",
+    "typescript": "^1.8.0-dev.20151213",
     "vscode": "0.10.x"
   },
   "dependencies": {}
