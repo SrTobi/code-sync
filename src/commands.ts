@@ -6,7 +6,7 @@ export async function backup()
 {
 	console.log("Start full backup...");
 	let configp = config_provider.getConfigProvider();
-	let backupp = backup_provider.getBackupProvider();
+	let backupp = await backup_provider.getBackupProvider();
 	
 	let configs = await configp.getConfigs();
 	

@@ -2,7 +2,7 @@ import {MergeHandler} from './merge';
 import * as path from 'path';
 import * as fs from 'fs';
 import {Readable} from 'stream';
-import {ConfigProvider} from './config_provider';
+import {ConfigProvider, ConfigProviderBackend, ConfigProviderTask} from './config_provider';
 
 export interface ConfigHandle {
 	name(): string;
@@ -13,11 +13,26 @@ export interface ConfigHandle {
 	
 	provider(): ConfigProvider;
 
-	replaceBy(other: ConfigHandle): Promise<void>;
+	replaceBy(other: ConfigHandle): void;
 	
-	blobStream(): Readable;
+	blobStream(): Promise<Readable>;
 
 	clone(newProvider: ConfigProvider): ConfigHandle;
+}
+
+class FileCopyTask implements ConfigProviderTask {
+	
+	constructor(
+		private _source: Promise<Readable>,
+		private _target: string
+	) {
+	}
+	
+	async execute(): Promise<void> {
+		let source = await this._source;
+		
+		source.pipe(fs.createWriteStream(this._target));
+	}
 }
 
 
@@ -26,7 +41,8 @@ export class FileConfigHandle implements ConfigHandle {
 	constructor(
 		private _path: string,
 		private _mountpoint: string,
-		private _configProvider: ConfigProvider
+		private _configProvider: ConfigProvider,
+		private _configProviderBackend: ConfigProviderBackend
 	) {
 	}
 	
@@ -46,15 +62,19 @@ export class FileConfigHandle implements ConfigHandle {
 		throw new Error("Not implemented");
 	}
 	
-	blobStream(): Readable {
-		return fs.createReadStream(this._path);
+	blobStream(): Promise<Readable> {
+		return new Promise<Readable>(
+			(resolve) => {
+				console.log("Create read stream to '" + this._path + "'...");
+				let stream = fs.createReadStream(this._path);
+				resolve(stream);
+			});
 	}
 
-	async replaceBy(other: ConfigHandle): Promise<void> {
-		return new Promise<void>(resolve => {
-			other.blobStream().pipe(fs.createWriteStream(this._path));
-			resolve();
-		});
+	replaceBy(other: ConfigHandle): void {
+		let task = new FileCopyTask(other.blobStream(), this._path);
+		console.log("Adding file copy task ('" + this.name() + "' -> '" + this.name() + "')...");
+		this._configProviderBackend.addTask(task);
 	}
 
 	clone(newProvider: ConfigProvider): ConfigHandle {

@@ -9,13 +9,35 @@ export interface ConfigProvider {
 	save(): Promise<void>;
 }
 
+export interface ConfigProviderTask {
+	execute(): void;
+}
+
+export class ConfigProviderBackend {
+	constructor(
+		private _tasks: ConfigProviderTask[]
+	) {
+	}
+	
+	addTask(task: ConfigProviderTask): void {
+		this._tasks.push(task);
+	}
+}
+
 class ActiveConfigProvider implements ConfigProvider {
 
+	private _tasks: ConfigProviderTask[] = new Array();
+	private _backend: ConfigProviderBackend;
+	
+	constructor() {
+		this._backend = new ConfigProviderBackend(this._tasks);
+	}
+	
 	async getConfigs(): Promise<ConfigHandle[]> {
 		return new Promise<ConfigHandle[]>(resolve => {
 			let configs = new Array<ConfigHandle>();
 			
-			configs.push(new FileConfigHandle(env.getEnvironment().getSettingsPath(), "user.settings", this));
+			configs.push(new FileConfigHandle(env.getEnvironment().getSettingsPath(), "user.settings", this, this._backend));
 			
 			resolve(configs);
 		});
@@ -30,8 +52,6 @@ class ActiveConfigProvider implements ConfigProvider {
 	}
 }
 
-let cprovider = new ActiveConfigProvider();
-
 export function getConfigProvider(): ConfigProvider {
-	return cprovider;
+	return new ActiveConfigProvider();
 }
