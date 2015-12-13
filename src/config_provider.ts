@@ -14,11 +14,8 @@ export interface ConfigProviderTask {
 }
 
 export class ConfigProviderBackend {
-	constructor(
-		private _tasks: ConfigProviderTask[]
-	) {
-	}
-	
+	private _tasks: ConfigProviderTask[] = new Array();
+		
 	addTask(task: ConfigProviderTask): void {
 		this._tasks.push(task);
 	}
@@ -26,12 +23,7 @@ export class ConfigProviderBackend {
 
 class ActiveConfigProvider implements ConfigProvider {
 
-	private _tasks: ConfigProviderTask[] = new Array();
-	private _backend: ConfigProviderBackend;
-	
-	constructor() {
-		this._backend = new ConfigProviderBackend(this._tasks);
-	}
+	private _backend = new ConfigProviderBackend();
 	
 	async getConfigs(): Promise<ConfigHandle[]> {
 		return new Promise<ConfigHandle[]>(resolve => {

@@ -1,10 +1,20 @@
 import {BackupProvider, BackupProviderConfigTemplate} from '../backup_provider';
-import {ConfigHandle} from '../config_handle';
+import {ConfigHandle, FileConfigHandle} from '../config_handle';
+import {ConfigProviderTask, ConfigProviderBackend} from '../config_provider';
+import * as path from 'path';
 
-class FSBackupProvider implements BackupProvider {
+interface FSBackupProviderConfigTemplate extends BackupProviderConfigTemplate{
+	path: string;
+}
+
+export class FSBackupProvider implements BackupProvider {
+	
+	private _basepath: string;
+	private _backend = new ConfigProviderBackend();
 	
 	constructor(template: BackupProviderConfigTemplate) {
-		
+		let t = <FSBackupProviderConfigTemplate>(template);
+		this._basepath = t.path;
 	}
 	
 	getConfigs(): Promise<ConfigHandle[]> {
@@ -12,7 +22,13 @@ class FSBackupProvider implements BackupProvider {
 	}
 	
 	getConfig(template: ConfigHandle): Promise<ConfigHandle> {
-		throw new Error("Not implemented");
+		return new Promise(resolve => {
+			let mp = template.mountpoint();
+			let name = template.name();
+			let filepath = path.join(this._basepath, mp, name);
+			let newHandle = new FileConfigHandle(filepath, mp, this, this._backend);
+			resolve(newHandle);
+		})
 	}
 
 	save(): Promise<void> {

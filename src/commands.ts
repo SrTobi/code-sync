@@ -10,7 +10,7 @@ export async function backup()
 	
 	let configs = await configp.getConfigs();
 	
-	for (var config in configs) {
+	for (var config of configs) {
 		let backup = await backupp.getConfig(config);
 		backup.replaceBy(config);
 	}
