@@ -5,15 +5,15 @@ var babel = require('gulp-babel');
 var concat = require('gulp-concat');
 
 
-var tsProject = ts.createProject('./tsconfig.json');
+var tsProject = ts.createProject('./tsconfig.json', { sortOutput: true });
 
 gulp.task('default', ['build']);
 
 gulp.task('build', function() {
-  return gulp.src('src/**/*.ts')
+  return tsProject.src()
     .pipe(sourcemaps.init())
-      .pipe(ts(tsProject))
+      .pipe(ts(tsProject)).js
       .pipe(babel())
     .pipe(sourcemaps.write('.', {includeContent: false, sourceRoot: '../../src'}))
-    .pipe(gulp.dest('./out/src'));
+    .pipe(gulp.dest('out'));
 });
