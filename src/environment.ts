@@ -6,7 +6,7 @@ export interface Environment {
 
 class WindowsEnvironment implements Environment {
 	getSettingsPath(): string {
-		return "%APPDATA%/Code/User/settings.json";
+		return path.join(process.env.APPDATA, "Code/User/settings.json");
 	}
 }
 
