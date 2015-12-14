@@ -3,10 +3,10 @@
 		"target": "ES6",
 		"module": "commonjs",
 		"noLib": true,
-		"sourceMap": true,
 		"noImplicitAny": true
 	},
 	"exclude": [
-		"node_modules"
+		"node_modules",
+		"out"
 	]
 }
