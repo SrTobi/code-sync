@@ -19,6 +19,12 @@ export class ConfigProviderBackend {
 	addTask(task: ConfigProviderTask): void {
 		this._tasks.push(task);
 	}
+	
+	async save(): Promise<void> {
+		for(let task of this._tasks) {
+			await task.execute();
+		}
+	}
 }
 
 class ActiveConfigProvider implements ConfigProvider {

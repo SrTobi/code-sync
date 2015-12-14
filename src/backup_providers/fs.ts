@@ -31,8 +31,8 @@ export class FSBackupProvider implements BackupProvider {
 		})
 	}
 
-	save(): Promise<void> {
-		throw new Error("Not implemented");
+	async save() {
+		await this._backend.save();
 	}
 	
 	supportVersioning(): boolean {

@@ -24,14 +24,25 @@ class FileCopyTask implements ConfigProviderTask {
 	
 	constructor(
 		private _source: Promise<Readable>,
+		private _sourceName: string,
 		private _target: string
 	) {
 	}
 	
-	async execute(): Promise<void> {
+	async execute() {
 		let source = await this._source;
-		
-		source.pipe(fs.createWriteStream(this._target));
+		await this.copy(source);
+	}
+	
+	private async copy(source: Readable) {
+		return new Promise<void>((resolve, reject) => {
+			console.log("Copy " + this._sourceName + " to " + this._target);
+			
+			var wr = fs.createWriteStream(this._target);
+			wr.on('error', reject);
+			wr.on('finish', resolve);
+			source.pipe(wr);
+		});
 	}
 }
 
@@ -72,7 +83,7 @@ export class FileConfigHandle implements ConfigHandle {
 	}
 
 	replaceBy(other: ConfigHandle): void {
-		let task = new FileCopyTask(other.blobStream(), this._path);
+		let task = new FileCopyTask(other.blobStream(), path.join(other.mountpoint(), other.name()), this._path);
 		console.log("Adding file copy task ('" + this.name() + "' -> '" + this.name() + "')...");
 		this._configProviderBackend.addTask(task);
 	}
