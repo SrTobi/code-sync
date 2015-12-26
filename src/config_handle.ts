@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import {Readable} from 'stream';
 import {ConfigProvider, ConfigProviderBackend, ConfigProviderTask} from './config_provider';
 import * as mkdirp from 'mkdirp';
+import {log} from './monitor';
 
 
 export interface ConfigHandle {
@@ -40,12 +41,12 @@ class FileCopyTask implements ConfigProviderTask {
         await this.createPath();
         
 		return new Promise<void>((resolve, reject) => {
-			console.log("Copy " + this._sourceName + " to " + this._target);
+			log("Copy " + this._sourceName + " to " + this._target);
 			
 			var wr = fs.createWriteStream(this._target);
 		        source.pipe(wr);
             wr.on('open', () => {
-                console.log("Opended destination file...");
+                log("Opended destination file...");
             });
 			wr.on('error', (err:any) => {console.log("error:"+ err);});
 			wr.on('finish', () => {console.log("finish");});
@@ -89,7 +90,7 @@ export class FileConfigHandle implements ConfigHandle {
 	blobStream(): Promise<Readable> {
 		return new Promise<Readable>(
 			(resolve, reject) => {
-				console.log("Create read stream to '" + this._path + "'...");
+				log("Create read stream to '" + this._path + "'...");
 				let stream = fs.createReadStream(this._path);
                 stream.on("error", reject);
 				stream.on("open", resolve);
@@ -98,7 +99,7 @@ export class FileConfigHandle implements ConfigHandle {
 
 	replaceBy(other: ConfigHandle): void {
 		let task = new FileCopyTask(other.blobStream(), path.join(other.mountpoint(), other.name()), this._path);
-		console.log("Adding file copy task ('" + this.name() + "' -> '" + this.name() + "')...");
+		log("Adding file copy task ('" + this.name() + "' -> '" + this.name() + "')...");
 		this._configProviderBackend.addTask(task);
 	}
 
