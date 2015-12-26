@@ -91,7 +91,8 @@ export class FileConfigHandle implements ConfigHandle {
 			(resolve, reject) => {
 				console.log("Create read stream to '" + this._path + "'...");
 				let stream = fs.createReadStream(this._path);
-				resolve(stream);
+                stream.on("error", reject);
+				stream.on("open", resolve);
 			});
 	}
 
