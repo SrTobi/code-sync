@@ -3,6 +3,8 @@ import * as path from 'path';
 import * as fs from 'fs';
 import {Readable} from 'stream';
 import {ConfigProvider, ConfigProviderBackend, ConfigProviderTask} from './config_provider';
+import * as mkdirp from 'mkdirp';
+
 
 export interface ConfigHandle {
 	name(): string;
@@ -35,16 +37,27 @@ class FileCopyTask implements ConfigProviderTask {
 	}
 	
 	private async copy(source: Readable) {
+        await this.createPath();
+        
 		return new Promise<void>((resolve, reject) => {
 			console.log("Copy " + this._sourceName + " to " + this._target);
 			
 			var wr = fs.createWriteStream(this._target);
-			wr.on('error', reject);
-			wr.on('finish', resolve);
-			source.pipe(wr);
+		        source.pipe(wr);
+            wr.on('open', () => {
+                console.log("Opended destination file...");
+            });
+			wr.on('error', (err:any) => {console.log("error:"+ err);});
+			wr.on('finish', () => {console.log("finish");});
 		});
 	}
-}
+    
+    private async createPath() {
+        return new Promise<void>(resolve => {
+           mkdirp(path.dirname(this._target), resolve); 
+        });
+    }
+}   
 
 
 export class FileConfigHandle implements ConfigHandle {
@@ -75,7 +88,7 @@ export class FileConfigHandle implements ConfigHandle {
 	
 	blobStream(): Promise<Readable> {
 		return new Promise<Readable>(
-			(resolve) => {
+			(resolve, reject) => {
 				console.log("Create read stream to '" + this._path + "'...");
 				let stream = fs.createReadStream(this._path);
 				resolve(stream);
