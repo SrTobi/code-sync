@@ -12,7 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
 	registerBackupProvider("fs", FSBackupProvider);
 
 	let cmd1 = vscode.commands.registerCommand('codesync.backup', () => {
-		commands.backup();
+		return commands.backup();
 	});
 	context.subscriptions.push(cmd1);
 	
