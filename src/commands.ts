@@ -23,18 +23,23 @@ export async function backup()
     freeMonitor(monitor);
 }
 
-export function restore()
+export async function restore()
 {
-	/*console.log("Start full restore...");
+    let monitor = aquireMonitor();
+	log("Start full restore...");
 	let configp = config_provider.getConfigProvider();
-	let backupp = backup_provider.getBackupProvider();
+	let backupp = await backup_provider.getBackupProvider();
 	
-	backupp.getConfigs(false).forEach(config => {
-		let configDest = configp.getConfig(config, false);
-		configDest.replaceBy(config);
-	});
+	let backups = await backupp.getConfigs();
 	
-	configp.save();*/
+	for (var backup of backups) {
+		let config = await configp.getConfig(backup);
+		config.replaceBy(backup);
+	}
+    
+	await configp.save();
+	log("Restore sucessfull!");
+    freeMonitor(monitor);
 }
 
 export function show()
