@@ -96,5 +96,7 @@
     "typescript": "^1.8.0-dev.20151213",
     "vscode": "0.10.x"
   },
-  "dependencies": {}
+  "dependencies": {
+    "mkdirp": "^0.5.1"
+  }
 }
