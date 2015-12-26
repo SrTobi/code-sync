@@ -8,6 +8,10 @@ class WindowsEnvironment implements Environment {
 	getSettingsPath(): string {
 		return path.join(process.env.APPDATA, "Code/User/settings.json");
 	}
+    
+    getKeyBindingPath(): string {
+        return path.join(process.env.APPDATA, "Code/User/keybindings.json");
+    }
 }
 
 export function getEnvironment() {

@@ -36,6 +36,7 @@ class ActiveConfigProvider implements ConfigProvider {
 			let configs = new Array<ConfigHandle>();
 			
 			configs.push(new FileConfigHandle(env.getEnvironment().getSettingsPath(), "user.settings", this, this._backend));
+			configs.push(new FileConfigHandle(env.getEnvironment().getKeyBindingPath(), "user.settings", this, this._backend));
 			
 			resolve(configs);
 		});
