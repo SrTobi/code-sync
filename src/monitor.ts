@@ -1,5 +1,5 @@
 
-interface Monitor
+export interface Monitor
 {
     
 }

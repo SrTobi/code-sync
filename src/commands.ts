@@ -1,11 +1,22 @@
 import * as vscode from 'vscode';
 import * as config_provider from './config_provider';
 import * as backup_provider from './backup_provider';
-import {aquireMonitor, freeMonitor, log} from './monitor';
+import {aquireMonitor, freeMonitor, hasActiveMonitor, log, Monitor} from './monitor';
+
+function getMonitor(): Monitor {
+    if (hasActiveMonitor()) {
+        return null;
+    }
+    
+    return aquireMonitor();
+}
 
 export async function backup()
 {
-    let monitor = aquireMonitor();
+    let monitor = getMonitor();
+    if (!monitor) 
+        return;
+        
 	log("Start full backup...");
 	let configp = config_provider.getConfigProvider();
 	let backupp = await backup_provider.getBackupProvider();
@@ -25,7 +36,10 @@ export async function backup()
 
 export async function restore()
 {
-    let monitor = aquireMonitor();
+    let monitor = getMonitor();
+    if (!monitor) 
+        return;
+        
 	log("Start full restore...");
 	let configp = config_provider.getConfigProvider();
 	let backupp = await backup_provider.getBackupProvider();
