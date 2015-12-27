@@ -44,12 +44,12 @@ class FileCopyTask implements ConfigProviderTask {
 			log("Copy " + this._sourceName + " to " + this._target);
 			
 			var wr = fs.createWriteStream(this._target);
-		        source.pipe(wr);
+		    source.pipe(wr);
             wr.on('open', () => {
-                log("Opended destination file...");
+                log("Destination opened: " + this._target);
             });
-			wr.on('error', (err:any) => {console.log("error:"+ err);});
-			wr.on('finish', () => {console.log("finish");});
+			wr.on('error', reject);
+			wr.on('finish', resolve);
 		});
 	}
     
@@ -93,7 +93,10 @@ export class FileConfigHandle implements ConfigHandle {
 				log("Create read stream to '" + this._path + "'...");
 				let stream = fs.createReadStream(this._path);
                 stream.on("error", reject);
-				stream.on("open", resolve);
+				stream.on("open", () => {
+                    log("Source opened[" + this.name() + "]: " + this._path);
+                    resolve(stream);
+                });
 			});
 	}
 

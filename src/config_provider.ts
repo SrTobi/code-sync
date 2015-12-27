@@ -10,7 +10,7 @@ export interface ConfigProvider {
 }
 
 export interface ConfigProviderTask {
-	execute(): void;
+	execute(): Promise<void>;
 }
 
 export class ConfigProviderBackend {
