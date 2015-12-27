@@ -28,6 +28,9 @@ export async function backup()
 		backup.replaceBy(config);
 	}
 	
+    log("###########################################");
+    log("### Start transfer");
+    
 	await backupp.save();
 	
 	log("Backup sucessfull!");
