@@ -3,17 +3,17 @@ import * as config_provider from './config_provider';
 import * as backup_provider from './backup_provider';
 import {aquireMonitor, freeMonitor, hasActiveMonitor, log, Monitor} from './monitor';
 
-function getMonitor(): Monitor {
+function getMonitor(action: string): Monitor {
     if (hasActiveMonitor()) {
         return null;
     }
     
-    return aquireMonitor();
+    return aquireMonitor(action);
 }
 
 export async function backup()
 {
-    let monitor = getMonitor();
+    let monitor = getMonitor("Backup");
     if (!monitor) 
         return;
         
@@ -39,7 +39,7 @@ export async function backup()
 
 export async function restore()
 {
-    let monitor = getMonitor();
+    let monitor = getMonitor("Restore");
     if (!monitor) 
         return;
         
