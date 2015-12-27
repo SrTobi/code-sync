@@ -10,11 +10,11 @@ class MonitorImpl implements Monitor
     private outputChannel: vscode.OutputChannel;
     public constructor(action: string) {
         this.outputChannel = vscode.window.createOutputChannel(action);
+        this.outputChannel.show();
     }
     
     public writeLine(line: string) {
         this.outputChannel.appendLine(line);
-        this.outputChannel.show();
     }
 }
 

@@ -10,7 +10,7 @@ export interface ConfigProvider {
 }
 
 export interface ConfigProviderTask {
-	execute(): Promise<void>;
+	execute(id: string): Promise<void>;
 }
 
 export class ConfigProviderBackend {
@@ -21,8 +21,10 @@ export class ConfigProviderBackend {
 	}
 	
 	async save(): Promise<void> {
+        let id = 1;
 		for(let task of this._tasks) {
-			await task.execute();
+			await task.execute(id.toString());
+            id++;
 		}
 	}
 }

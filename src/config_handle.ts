@@ -13,6 +13,8 @@ export interface ConfigHandle {
 	date(): Date;
 	
 	mountpoint(): string;
+    
+    path(): string;
 	
 	provider(): ConfigProvider;
 
@@ -32,24 +34,23 @@ class FileCopyTask implements ConfigProviderTask {
 	) {
 	}
 	
-	async execute() {
+	async execute(id: string) {
 		let source = await this._source;
-		await this.copy(source);
+		await this.copy(source, id);
 	}
 	
-	private async copy(source: Readable) {
+	private async copy(source: Readable, id: string) {
         await this.createPath();
         
-		return new Promise<void>((resolve, reject) => {
-			log("Copy " + this._sourceName + " to " + this._target);
-			
+		return new Promise<void>((resolve, reject) => {			
 			var wr = fs.createWriteStream(this._target);
 		    source.pipe(wr);
             wr.on('open', () => {
-                log("Destination opened: " + this._target);
+                log(id + ": Destination opened: " + this._target);
+			    log(id + ": Copy " + this._sourceName + " to " + this._target);
             });
 			wr.on('error', reject);
-			wr.on('finish', resolve);
+			wr.on('finish', () => {log(id + ": Job finished!"); resolve(); });
 		});
 	}
     
@@ -78,6 +79,10 @@ export class FileConfigHandle implements ConfigHandle {
 	mountpoint(): string {
 		return this._mountpoint;
 	}
+    
+    path(): string {
+        return this._path;
+    }
 	
 	provider(): ConfigProvider {
 		return this._configProvider;
@@ -90,7 +95,6 @@ export class FileConfigHandle implements ConfigHandle {
 	blobStream(): Promise<Readable> {
 		return new Promise<Readable>(
 			(resolve, reject) => {
-				log("Create read stream to '" + this._path + "'...");
 				let stream = fs.createReadStream(this._path);
                 stream.on("error", reject);
 				stream.on("open", () => {
@@ -102,7 +106,7 @@ export class FileConfigHandle implements ConfigHandle {
 
 	replaceBy(other: ConfigHandle): void {
 		let task = new FileCopyTask(other.blobStream(), path.join(other.mountpoint(), other.name()), this._path);
-		log("Adding file copy task ('" + this.name() + "' -> '" + this.name() + "')...");
+		log("Adding file copy task ('" + other.path() + "' -> '" + this.path() + "')...");
 		this._configProviderBackend.addTask(task);
 	}
 
