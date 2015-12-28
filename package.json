@@ -97,6 +97,7 @@
     "vscode": "0.10.x"
   },
   "dependencies": {
+    "glob": "^6.0.2",
     "mkdirp": "^0.5.1"
   }
 }
