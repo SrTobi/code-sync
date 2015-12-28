@@ -12,6 +12,10 @@ class WindowsEnvironment implements Environment {
     getKeyBindingPath(): string {
         return path.join(process.env.APPDATA, "Code/User/keybindings.json");
     }
+    
+    getSnippetDir(): string {
+        return path.join(process.env.APPDATA, "Code/User/snippets");
+    }
 }
 
 export function getEnvironment() {
