@@ -53,11 +53,30 @@ class ActiveConfigProvider implements ConfigProvider {
 	}
     
 	async getConfig(template: ConfigHandle): Promise<ConfigHandle> {
-		throw new Error("Not implemented");
+        if (template.mountpoint() == "user.settings") {
+            let path = "";
+            switch(template.name()) {
+                case "settings.json": 
+                    path = env.getEnvironment().getSettingsPath();
+                    break;
+                case "keybindings.json":
+                    path = env.getEnvironment().getKeyBindingPath();
+                    break
+                default:
+                    throw new Error("Config is not member of user.settings.");                
+            };
+            
+            return new FileConfigHandle(path, "user.settings", this, this._backend);
+        } if(template.mountpoint() == "user.snippets") {
+            let p = path.join(env.getEnvironment().getSnippetDir(), template.name());
+            return new FileConfigHandle(p, "user.snippets", this, this._backend);
+        } else {
+            throw new Error("Mountpoint " + template.mountpoint() + " is not known!");
+        }
 	}
 
 	async save(): Promise<void> {
-		throw new Error("Not implemented");
+		await this._backend.save();
 	}
     
     private async globSnippets(): Promise<string[]> {
