@@ -53,6 +53,9 @@ export async function restore()
 		let config = await configp.getConfig(backup);
 		config.replaceBy(backup);
 	}
+	
+    log("###########################################");
+    log("### Start transfer");
     
 	await configp.save();
 	log("Restore sucessfull!");
