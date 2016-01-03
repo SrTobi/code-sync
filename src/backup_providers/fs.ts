@@ -6,6 +6,22 @@ interface FSBackupProviderConfigTemplate extends BackupProviderConfigTemplate{
 	path: string;
 }
 
+class JSONLocation implements BackupLocation<JSON> {
+    _path: string;
+    
+    constructor(path: string) {
+        this._path = path;
+    }
+    
+    async load(): Promise<JSON> {
+        return await utils.readJSON(this._path);
+    }
+    
+    async save(newValue: JSON): Promise<void> {
+        return await utils.writeJSON(this._path, newValue);
+    }
+}
+
 export class FSBackupProvider implements BackupProvider {
 	
 	private _basepath: string;
@@ -17,16 +33,14 @@ export class FSBackupProvider implements BackupProvider {
 	
 
     async getSettingsLocation(): Promise<BackupLocation<JSON>> {
-        return null;
+        return utils.asPromise(new JSONLocation(path.join(this._basepath, "settings.json")));
     }
     
     async getKeyShortcutLocation(): Promise<BackupLocation<JSON>> {
-        return null;
-        
+        return utils.asPromise(new JSONLocation(path.join(this._basepath, "keyshortcuts.json")));
     }
     
     async getSnippetsLocations(): Promise<BackupLocation<JSON>[]> {
-        return null;
-        
+        throw new Error("Not implemented!");
     }
 }

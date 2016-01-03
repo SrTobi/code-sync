@@ -2,6 +2,7 @@ import * as path from 'path';
 
 export interface Environment {
 	getSettingsPath(): string;
+    getKeyBindingPath(): string;
 }
 
 class WindowsEnvironment implements Environment {
@@ -18,7 +19,7 @@ class WindowsEnvironment implements Environment {
     }
 }
 
-export function getEnvironment() {
+export function getEnvironment(): Environment {
 	if (process.platform === "win32") {
 		return new WindowsEnvironment();
 	} else {
