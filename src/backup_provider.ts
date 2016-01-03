@@ -1,5 +1,3 @@
-import {ConfigProvider} from './config_provider';
-import {ConfigHandle} from './config_handle';
 import * as vscode from 'vscode';
 
 
@@ -12,13 +10,15 @@ export interface BackupProviderFactory {
 	new(template: BackupProviderConfigTemplate): BackupProvider;
 }
 
+export interface BackupLocation<Type> {
+    load(): Promise<Type>;
+    save(newValue: Type): Promise<void>;
+}
+
 export interface BackupProvider {
-	getConfigs(): Promise<ConfigHandle[]>;
-	getConfig(template: ConfigHandle): Promise<ConfigHandle>;
-    
-	save(): Promise<void>;
-    
-	supportVersioning(): boolean;
+    getSettingsLocation(): Promise<BackupLocation<JSON>>;
+    getKeyShortcutLocation(): Promise<BackupLocation<JSON>>;
+    getSnippetsLocations(): Promise<BackupLocation<JSON>[]>;
 }
 
 var GlobalProviderList: { [id: string]: BackupProviderFactory } = {};

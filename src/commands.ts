@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as config_provider from './config_provider';
+import * as active_config from './active_config';
 import * as backup_provider from './backup_provider';
 import {aquireMonitor, freeMonitor, hasActiveMonitor, log, Monitor} from './monitor';
 
@@ -17,49 +17,42 @@ export async function backup()
     if (!monitor) 
         return;
         
-	log("Start full backup...");
-	let configp = config_provider.getConfigProvider();
-	let backupp = await backup_provider.getBackupProvider();
-	
-	let configs = await configp.getConfigs();
-	
-	for (var config of configs) {
-		let backup = await backupp.getConfig(config);
-		backup.replaceBy(config);
-	}
-	
-    log("###########################################");
-    log("### Start transfer");
-    
-	await backupp.save();
-	
-	log("Backup sucessfull!");
-    freeMonitor(monitor);
+    try {
+        log("Start backup...");
+        
+        let provider = await backup_provider.getBackupProvider();
+        let config = await active_config.getActiveConfig();
+        
+        config.backup(provider);
+        
+	    log("Backup sucessfull!");
+    } catch (error) {
+        log("Backup failed [" + error.toString() + "]");
+    } finally {
+        freeMonitor(monitor);
+    }
 }
 
 export async function restore()
 {
-    let monitor = getMonitor("Restore");
+    let monitor = getMonitor("Backup");
     if (!monitor) 
         return;
         
-	log("Start full restore...");
-	let configp = config_provider.getConfigProvider();
-	let backupp = await backup_provider.getBackupProvider();
-	
-	let backups = await backupp.getConfigs();
-	
-	for (var backup of backups) {
-		let config = await configp.getConfig(backup);
-		config.replaceBy(backup);
-	}
-	
-    log("###########################################");
-    log("### Start transfer");
-    
-	await configp.save();
-	log("Restore sucessfull!");
-    freeMonitor(monitor);
+    try {
+        log("Start restore...");
+        
+        let provider = await backup_provider.getBackupProvider();
+        let config = await active_config.getActiveConfig();
+        
+        config.restore(provider);
+        
+	    log("Restore sucessfull!");
+    } catch (error) {
+        log("Restore failed [" + error.toString() + "]");
+    } finally {
+        freeMonitor(monitor);
+    }
 }
 
 export function show()
