@@ -4,9 +4,16 @@ import {glob} from  './utils';
 import * as path from 'path';
 
 
+export interface ImportExportHandle {
+    export(to: ConfigHandle): Promise<ConfigHandle>;
+    import(from: ConfigHandle): Promise<ConfigHandle>;
+    
+    getConfigHandle(): ConfigHandle;
+}
+
 export interface ConfigProvider {
-	getConfigs(): Promise<ConfigHandle[]>;
-	getConfig(template: ConfigHandle): Promise<ConfigHandle>;
+	getConfigs(): Promise<ImportExportHandle[]>;
+	getConfig(template: ConfigHandle): Promise<ImportExportHandle>;
 
 	save(): Promise<void>;
 }

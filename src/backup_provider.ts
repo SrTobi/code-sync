@@ -12,7 +12,12 @@ export interface BackupProviderFactory {
 	new(template: BackupProviderConfigTemplate): BackupProvider;
 }
 
-export interface BackupProvider extends ConfigProvider {
+export interface BackupProvider {
+	getConfigs(): Promise<ConfigHandle[]>;
+	getConfig(template: ConfigHandle): Promise<ConfigHandle>;
+    
+	save(): Promise<void>;
+    
 	supportVersioning(): boolean;
 }
 
