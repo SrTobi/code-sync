@@ -23,7 +23,7 @@ export async function backup()
         let provider = await backup_provider.getBackupProvider();
         let config = await active_config.getActiveConfig();
         
-        config.backup(provider);
+        await config.backup(provider);
         
 	    log("Backup sucessfull!");
     } catch (error) {
@@ -45,7 +45,7 @@ export async function restore()
         let provider = await backup_provider.getBackupProvider();
         let config = await active_config.getActiveConfig();
         
-        config.restore(provider);
+        await config.restore(provider);
         
 	    log("Restore sucessfull!");
     } catch (error) {

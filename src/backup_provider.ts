@@ -11,14 +11,14 @@ export interface BackupProviderFactory {
 }
 
 export interface BackupLocation<Type> {
-    load(): Promise<Type>;
+    load(preload: boolean): Promise<Type>;
     save(newValue: Type): Promise<void>;
 }
 
 export interface BackupProvider {
-    getSettingsLocation(): Promise<BackupLocation<JSON>>;
-    getKeyShortcutLocation(): Promise<BackupLocation<JSON>>;
-    getSnippetsLocations(): Promise<BackupLocation<JSON>[]>;
+    getSettingsLocation(): Promise<BackupLocation<any>>;
+    getKeyShortcutLocation(): Promise<BackupLocation<any>>;
+    getSnippetsLocations(): Promise<BackupLocation<any>[]>;
 }
 
 var GlobalProviderList: { [id: string]: BackupProviderFactory } = {};

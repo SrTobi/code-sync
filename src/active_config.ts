@@ -17,22 +17,34 @@ class ActiveConfigImpl implements ActiveConfig {
     
     async backup(provider: BackupProvider): Promise<void> {
         // backup settings
-        this.backupJSON(await provider.getSettingsLocation(), this._environment.getSettingsPath());
+        await this.backupJSON(
+            await provider.getSettingsLocation(),
+            this._environment.getSettingsPath()
+        );
         
         // backup shortcuts
-        this.backupJSON(await provider.getKeyShortcutLocation(), this._environment.getSettingsPath());
+        await this.backupJSON(
+            await provider.getKeyShortcutLocation(),
+            this._environment.getSettingsPath()
+        );
     }
     
     async restore(provider: BackupProvider): Promise<void> {
         // backup settings
-        this.restoreJSON(await provider.getSettingsLocation(), this._environment.getSettingsPath());
+        await this.restoreJSON(
+            await provider.getSettingsLocation(),
+            this._environment.getSettingsPath()
+        );
         
         // backup shortcuts
-        this.restoreJSON(await provider.getKeyShortcutLocation(), this._environment.getSettingsPath());
+        await this.restoreJSON(
+            await provider.getKeyShortcutLocation(),
+            this._environment.getSettingsPath()
+        );
     }
     
     async backupJSON(location: BackupLocation<JSON>, path: string): Promise<void> {
-        let oldJson = await location.load();
+        let oldJson = await location.load(true);
         let newJson = await utils.readJSON(path);
         
         // process json
@@ -43,7 +55,7 @@ class ActiveConfigImpl implements ActiveConfig {
     
     async restoreJSON(location: BackupLocation<JSON>, path: string): Promise<void> {
         let oldJson = await utils.readJSON(path);
-        let newJson = await location.load();
+        let newJson = await location.load(false);
         
         // process json
         
