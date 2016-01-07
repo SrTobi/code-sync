@@ -69,6 +69,46 @@
               "path": "/test"
             }
           ]
+        },
+        "codesync.filters": {
+            "title": "Filter Lists",
+            "type": "object",
+            "description": "List of filter lists" ,
+            "patternProperties": {
+                ".*": {
+                    "title": "Filter List",
+                    "type": "object",
+                    "description": "A list of how specific properties shall be synced",
+                    "properties": {
+                        "default": {
+                            "enum": [
+                                "ignore",
+                                "up",
+                                "down",
+                                "sync"
+                            ],
+                            "description": "The default way properties are synced"
+                        }
+                    },
+                    "patternProperties": {
+                        ".*": {
+                            "enum": [
+                                "ignore",
+                                "up",
+                                "down",
+                                "sync"
+                            ],
+                            "description": "The way the property is synced"
+                        }
+                    }
+                }
+            },
+            "default": {
+                "settings": {
+                    "default": "ignore",
+                    "extension.example": "sync"
+                }
+            }
         }
       }
     }

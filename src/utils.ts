@@ -52,3 +52,10 @@ export function asPromise<T>(value: T): Promise<T> {
         resolve(value); 
     });
 }
+
+export function mergeObjects(lower: any, higher: any): any {
+    let result: {[key: string]: any} = {};
+    for(let attr in lower) { result[attr] = lower[attr]; }
+    for(let attr in higher) { result[attr] = higher[attr]; }
+    return result;
+}
